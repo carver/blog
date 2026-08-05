@@ -1,0 +1,93 @@
+baseURL: "https://example.org/"
+languageCode: "en-us"
+title: "Jason Carver"
+theme: "PaperMod"
+
+# Read commit history via git so PaperMod can show accurate lastmod ("Updated")
+# dates without touching frontmatter by hand. See frontmatter.lastmod below.
+enableGitInfo: true
+
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+
+pagination:
+  pagerSize: 10
+
+minify:
+  tdewolff:
+    html:
+      keepWhitespace: false
+
+# Hugo's default taxonomy config already maps "tags" -> tag; set explicitly
+# so it's clear tags are on and PaperMod's tag list / per-tag archives work.
+taxonomies:
+  tag: tags
+
+# Hugo emits RSS for the home page and taxonomy/term pages by default.
+# No `outputs` override is present here on purpose — that default stays on.
+
+# lastmod is derived from the most recent git commit touching the file.
+# Falls back to explicit lastmod/modified/date front matter, then date,
+# if git info isn't available (e.g. a shallow checkout with no history).
+frontmatter:
+  lastmod:
+    - ":git"
+    - lastmod
+    - modified
+    - date
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+
+params:
+  env: production
+  title: "Jason Carver"
+  description: "Personal blog of Jason Carver."
+  author: "Jason Carver"
+
+  # Dark/light follows OS preference. This is PaperMod's own default, but
+  # it's set explicitly here per the requirement to not leave it implicit.
+  defaultTheme: auto
+  disableThemeToggle: false
+
+  ShowReadingTime: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowShareButtons: false
+  ShowWordCount: false
+  ShowRssButtonInSectionTermList: true
+  ShowToc: false
+  disableSpecial1stPost: true
+  hidemeta: false
+  hideSummary: false
+
+  # Minimal "profile mode"-style home info, no cover image required.
+  homeInfoParams:
+    Title: "Hi, I'm Jason \U0001F44B"
+    Content: "This is my personal blog, where I write about software and whatever else I'm working on."
+
+  socialIcons:
+    - name: github
+      url: "https://github.com/"
+    - name: rss
+      url: "index.xml"
+
+  assets:
+    disableHLJS: false
+
+menu:
+  main:
+    - identifier: posts
+      name: Posts
+      url: /posts/
+      weight: 10
+    - identifier: tags
+      name: Tags
+      url: /tags/
+      weight: 20
