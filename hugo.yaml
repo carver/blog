@@ -1,6 +1,6 @@
 baseURL: "https://carver.github.io/blog"
 locale: "en-us"
-title: "Jason Carver"
+title: "Jason Carver's Weblog"
 theme: "PaperMod"
 
 # Read commit history via git so PaperMod can show accurate lastmod ("Updated")
@@ -59,7 +59,7 @@ params:
   ShowPostNavLinks: true
   ShowBreadCrumbs: true
   ShowCodeCopyButtons: true
-  ShowShareButtons: false
+  ShowShareButtons: true
   ShowWordCount: false
   ShowRssButtonInSectionTermList: true
   ShowToc: false
@@ -69,12 +69,12 @@ params:
 
   # Minimal "profile mode"-style home info, no cover image required.
   homeInfoParams:
-    Title: "Hi, I'm Jason \U0001F44B"
-    Content: "This is my personal blog, where I write about software and whatever else I'm working on."
+    Title: "Huh, it looks like this AI thing is for real"
+    Content: "My musings on using AI and navigating the new risks. I might also write about education, cryptocurrency, or board games. We'll see!"
 
   socialIcons:
     - name: github
-      url: "https://github.com/"
+      url: "https://github.com/carver"
     - name: rss
       url: "index.xml"
 
