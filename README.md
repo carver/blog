@@ -76,3 +76,77 @@ fetches full history (`fetch-depth: 0`) for the same reason.
 (matching the version used locally) and deploys the result to GitHub Pages
 via `actions/deploy-pages` on every push to `main`. See the setup notes from
 the assistant for the one-time GitHub repo settings step still required.
+
+## Post previews
+
+Opening a pull request publishes a preview of the site — drafts included — to
+a throwaway URL that can be shared with people who don't have a GitHub
+account. Push a branch, open a PR, and the Cloudflare Pages check run on the
+PR links to a URL like `https://a1b2c3d4.blog-preview.pages.dev`. It rebuilds
+on every push to the branch and is deleted when the project is.
+
+Previews are built by Cloudflare rather than by a GitHub Actions workflow,
+which keeps GitHub Pages free for production: **a repository only gets one
+Pages deployment**, so a preview built through `actions/deploy-pages` would
+overwrite the live site.
+
+### Why this can't be triggered by someone else
+
+Cloudflare's GitHub App does not create previews for pull requests opened
+from forks — only for branches pushed to this repository, which nobody else
+can write to. That is a property of the integration, not a rule configured
+here, so there is no `if:` guard to keep in sync and no build minutes burned
+by a stranger's PR.
+
+### What the build does differently from production
+
+`scripts/cf-pages-build.sh` is the build command. Compared to the production
+workflow it:
+
+- builds drafts and future-dated posts (`--buildDrafts --buildFuture`) — the
+  archetype marks new posts `draft: true`, so without this a preview of a
+  work-in-progress post would be an empty site;
+- sets `--baseURL` to match Cloudflare' target domain, so stylesheets and
+  internal links resolve against the preview host instead of pointing back at
+  `carver.github.io`;
+- runs in the `preview` environment and overrides `params.env`, because
+  PaperMod emits `<meta name="robots" content="index, follow">` when *either*
+  `hugo.IsProduction` or `site.Params.env == "production"` is true — both have
+  to be off for the tag to flip to `noindex`;
+- writes a `_headers` file (`X-Robots-Tag: noindex, nofollow`) and a
+  disallow-everything `robots.txt` into `public/`, so an unfinished post can't
+  turn up in search results or compete with the real site.
+
+It also runs `git submodule update --init` when `themes/PaperMod` is missing:
+Cloudflare's checkout does not initialise submodules, and the resulting Hugo
+error doesn't mention the theme.
+
+To test the exact preview build locally:
+
+```sh
+WORKERS_CI_BRANCH=local PREVIEW_DOMAIN="host:1313" ./scripts/cf-pages-build.sh
+```
+
+### One-time Cloudflare setup
+
+1. At <https://dash.cloudflare.com> → **Workers & Pages** → **Create** →
+   **Pages** → **Connect to Git**, authorise the Cloudflare GitHub App for
+   *only* the `carver/blog` repository and select it.
+2. Name the project `blog-preview` (this becomes the `*.pages.dev` hostname).
+3. Build settings:
+   - Build command: `./scripts/cf-pages-build.sh`
+   - Version command: `npx wrangler versions upload --preview-alias $WORKERS_CI_BRANCH`
+   - Deploy command: `ls`
+   The deploy command is a no-op because we are only interested in the preview
+   builds for now. If you want to do production builds, use `npx wrangler deploy`.
+4. Add an environment variable `HUGO_VERSION` = `0.164.0`, matching
+   `HUGO_VERSION` in `.github/workflows/hugo.yaml`. Without it Cloudflare
+   picks its own default. Keep the two in sync on Hugo upgrades. (The theme
+   uses no SCSS, so the non-extended binary Cloudflare may install is fine.)
+4. Add an environment variable that matches the domain you were assigned by
+   Cloudflare. Set `PREVIEW_DOMAIN` to something like
+   `-blog-preview.a1b2c3.workers.dev` (the actual domain will be shown in the
+   Cloudflare dashboard under **Domains**). **Note the leading dash!**
+5. Under **Settings → Build → Branch Control**, check to enable **Builds for
+   non-production branches: Enabled**. This way Cloudflare will build versions
+   of the site tied to every branch push.
