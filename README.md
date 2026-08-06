@@ -135,7 +135,7 @@ WORKERS_CI_BRANCH=local PREVIEW_DOMAIN="host:1313" ./scripts/cf-pages-build.sh
 2. Name the project `blog-preview` (this becomes the `*.pages.dev` hostname).
 3. Build settings:
    - Build command: ./scripts/cf-pages-build.sh
-   - Version command: npx wrangler versions upload
+   - Version command: npx wrangler versions deploy
    - Deploy command: ls
    The deploy command is a no-op because we are only interested in the preview
    builds for now. If you want to do production builds, use `npx wrangler deploy`.
