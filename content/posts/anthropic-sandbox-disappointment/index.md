@@ -1,8 +1,8 @@
 ---
-date: '2026-08-05T12:51:33-07:00'
+date: '2026-08-06T10:45:00-07:00'
 draft: true
 title: 'Anthropic Sandbox Disappointment'
-tags: ['anthropic', 'sandbox', 'claude-code']
+tags: ['anthropic', 'isolation', 'claude-code']
 ---
 
 Maybe you are like I was: curious to run Claude Code on your machine, but feeling
@@ -12,6 +12,8 @@ hesitant. You suspect that things could [go][3] [terribly][1] [wrong][2].
 [2]: https://chriscole.substack.com/p/careful-claude-might-know-all-your
 [3]: https://news.ycombinator.com/item?id=48916975
 
+> #### Claude Code deleted my entire 202GB archive
+>
 > I asked Claude Code to remove the empty volume and let the other one expand to the full 2TB. I explicitly said "do not remove any data."
 >
 > It ran `diskutil apfs deleteVolume` on the volume WITH my data.
@@ -23,8 +25,8 @@ A few days ago (I know Frontier Friends, I'm behind), I decided it was time to t
 
 ### Don't accidentally my whole system
 
-The obvious solution is to add an isolation layer of some kind. So if Claude Code goes rogue, it
-won't cause so much damage.
+The natural solution is to add an isolation layer of some kind. So if Claude Code goes rogue, it
+won't cause too much damage.
 
 I figured that Anthropic cares about security, so surely they must have some prebuilt solution.
 The often-recommended one is to wrap `claude` inside of
@@ -33,7 +35,7 @@ The often-recommended one is to wrap `claude` inside of
 
 ### `srt` Disappoints
 
-`srt` offers to limit access to the filesystem (and network), in a configurable way. Then you can
+`srt` sounds great! It limits access to the filesystem (and network), in a configurable way. Then you can
 run `srt claude` and Claude won't be able to see the files outside its sandbox. They make [big
 promises](https://github.com/anthropic-experimental/sandbox-runtime/#overview):
 
@@ -77,18 +79,18 @@ the gist:
 Well, maybe I can improve it? `srt` is open source. I have some good ideas.
 
 Unfortunately, the repository doesn't look super responsive to outside requests. I see a lot of open
-pull requests and issues that have been around for a while, without comment. Some that seem pretty
+pull requests and issues that have been around for a while, without comment. Some are 
 [aggravating](https://github.com/anthropic-experimental/sandbox-runtime/issues/139).
 
 It doesn't seem worth my time to try to open a PR.
 
 ### A better alternative
 
-In the end I went a very different direction. I'll save that for the next post. (Yes, it's the
-direction of Docker containers, but not exactly)
+In the end I went a very different direction. I'll save that for the next post.
+(Hint: it's almost a Docker container, but some important extra sauce)
 
-If you're interested in this kind of tool, though, there are
+If you're interested in a tool without containers, though, there are
 better options. [`nono`](https://github.com/nolabs-ai/nono) does basically what I expected `srt` to
 do, with `nono run --profile claude-code --allow-cwd -- claude`. (I'm not affiliated)
 
-See you next time!
+Stay safe out there!
