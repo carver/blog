@@ -106,7 +106,7 @@ workflow it:
 - builds drafts and future-dated posts (`--buildDrafts --buildFuture`) — the
   archetype marks new posts `draft: true`, so without this a preview of a
   work-in-progress post would be an empty site;
-- sets `--baseURL` from Cloudflare's `CF_PAGES_URL`, so stylesheets and
+- sets `--baseURL` to match Cloudflare' target domain, so stylesheets and
   internal links resolve against the preview host instead of pointing back at
   `carver.github.io`;
 - runs in the `preview` environment and overrides `params.env`, because
@@ -124,7 +124,7 @@ error doesn't mention the theme.
 To test the exact preview build locally:
 
 ```sh
-CF_PAGES_URL=http://localhost:1313 ./scripts/cf-pages-build.sh
+WORKERS_CI_BRANCH=local PREVIEW_DOMAIN="host:1313" ./scripts/cf-pages-build.sh
 ```
 
 ### One-time Cloudflare setup
@@ -134,14 +134,19 @@ CF_PAGES_URL=http://localhost:1313 ./scripts/cf-pages-build.sh
    *only* the `carver/blog` repository and select it.
 2. Name the project `blog-preview` (this becomes the `*.pages.dev` hostname).
 3. Build settings:
-   - Framework preset: **None**
-   - Build command: `./scripts/cf-pages-build.sh`
-   - Build output directory: `public`
+   - Build command: ./scripts/cf-pages-build.sh
+   - Version command: npx wrangler versions upload
+   - Deploy command: ls
+   The deploy command is a no-op because we are only interested in the preview
+   builds for now. If you want to do production builds, use `npx wrangler deploy`.
 4. Add an environment variable `HUGO_VERSION` = `0.164.0`, matching
    `HUGO_VERSION` in `.github/workflows/hugo.yaml`. Without it Cloudflare
    picks its own default. Keep the two in sync on Hugo upgrades. (The theme
    uses no SCSS, so the non-extended binary Cloudflare may install is fine.)
-5. Under **Settings → Builds & deployments → Configure Production
-   deployments**, uncheck **Enable automatic production branch deployments**.
-   Production lives on GitHub Pages; this stops Cloudflare from publishing a
-   duplicate copy of the site from `main`.
+4. Add an environment variable that matches the domain you were assigned by
+   Cloudflare. Set `PREVIEW_DOMAIN` to something like
+   `-blog-preview.a1b2c3.workers.dev` (the actual domain will be shown in the
+   Cloudflare dashboard under **Domains**). **Note the leading dash!**
+5. Under **Settings → Build → Branch Control**, check to enable **Builds for
+   non-production branches: Enabled**. This way Cloudflare will build versions
+   of the site tied to every branch push.

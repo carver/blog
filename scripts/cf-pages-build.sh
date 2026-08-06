@@ -29,16 +29,18 @@ if [ -z "${WORKERS_CI_BRANCH:-}" ]; then
   exit 1
 fi
 # Next, check that the rest of the domain is set in Cloudflare.
-# PRODUCTION_DOMAIN is the domain name of the production site, e.g. "blog-preview.a1b2c3.pages.dev".
-if [ -z "${PRODUCTION_DOMAIN:-}" ]; then
-  echo "PRODUCTION_DOMAIN is unset — You must manually set this variable in the Cloudflare Workers build." >&2
+# PREVIEW_DOMAIN is the domain name of the production site, plus the leading dash that separates it from the branch e.g. "-blog-preview.a1b2c3.pages.dev".
+if [ -z "${PREVIEW_DOMAIN:-}" ]; then
+  echo "PREVIEW_DOMAIN is unset — You must manually set this variable in the Cloudflare Workers build." >&2
   exit 1
 fi
-# CF_PAGES_URL is the unique per-deployment URL Cloudflare injects, e.g.
+# CF_PAGES_URL is built to be the final Cloudflare URL, crafted using injected
+# environment variables, e.g. WORKERS_CI_BRANCH=branch-name and
+# PREVIEW_DOMAIN=-blog-preview.a1b2c3.pages.dev would build
 # https://branch-name-blog-preview.a1b2c3.pages.dev — the same URL the GitHub check run
 # links to. Hugo needs it as baseURL or every stylesheet and internal link in
 # the preview points back at the production GitHub Pages site.
-CF_PAGES_URL="https://${WORKERS_CI_BRANCH}-${PRODUCTION_DOMAIN}"
+CF_PAGES_URL="https://${WORKERS_CI_BRANCH}${PREVIEW_DOMAIN}"
 
 echo "==> Building preview for branch '${WORKERS_CI_BRANCH:-unknown}' at $CF_PAGES_URL"
 
