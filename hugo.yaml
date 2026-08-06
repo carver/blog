@@ -70,7 +70,7 @@ params:
   # Minimal "profile mode"-style home info, no cover image required.
   homeInfoParams:
     Title: "Huh, it looks like this AI thing is for real"
-    Content: "My musings on using AI and navigating the new risks. I might also write about education, cryptocurrency, or board games. We'll see!"
+    Content: "My musings on AI. Maybe also education, cryptocurrency, or board games. We'll see!"
 
   socialIcons:
     - name: github
