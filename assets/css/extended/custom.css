@@ -1,0 +1,58 @@
+/*
+ * Site-specific CSS overrides.
+ *
+ * PaperMod concatenates every file matching `assets/css/extended/*.css` after
+ * its own core stylesheet (see the theme's `layouts/_partials/head.html`), so
+ * rules here win ties against theme rules of equal specificity without needing
+ * `!important`. Hugo merges the project's `assets/` with the theme's, so this
+ * file sits alongside the theme's own `extended/blank.css` — the theme itself
+ * stays untouched, which keeps the submodule cleanly upgradeable.
+ */
+
+/*
+ * Code blocks — green body text.
+ *
+ * Scoped to `pre code` so it applies to fenced blocks only; inline `code`
+ * spans keep the theme's default treatment (small, tinted background).
+ *
+ * This replaces the theme's `.md-content pre code { color: rgb(213,213,214) }`.
+ * Same specificity, later in the bundle, so it wins on source order.
+ *
+ * Note this colours the *unhighlighted* text in a block. Hugo's Chroma
+ * highlighter runs with `noClasses` on (Hugo's default, and nothing in
+ * hugo.yaml changes it), which emits per-token colours as inline styles —
+ * those beat any stylesheet and so keep their syntax colours. The practical
+ * effect: languages Chroma tokenises heavily keep their palette with green
+ * showing through the gaps, while plain and shell-style blocks go fully green.
+ *
+ * Contrast against the block background (`--code-block-bg`, which the theme
+ * forces dark in both light and dark mode) is 10.9:1 in light mode and 8.7:1
+ * in dark — comfortably past WCAG AAA, as the grey it replaces was.
+ */
+.post-content pre code {
+    color: #b7d9b1;
+}
+
+/*
+ * Visited links — a lavender shift.
+ *
+ * The theme gives content links no colour of their own; they inherit body text
+ * and are distinguished only by an underline. So this tint is what separates
+ * visited from unvisited, rather than a variation on an existing link colour.
+ *
+ * `:not(.anchor)` leaves the heading anchor links alone, matching how the
+ * theme scopes its own link rules in `common/md-content.css`.
+ *
+ * Only `color` is set: browsers restrict which properties `:visited` may
+ * change (colour and a few others) to prevent history sniffing, and ignore
+ * alpha there — hence opaque hex values rather than a colour-mix or rgba.
+ *
+ * 5.9:1 on the light background and 8.3:1 on the dark one, both past AA.
+ */
+.post-content a:visited:not(.anchor) {
+    color: #6b5b9a;
+}
+
+:root[data-theme="dark"] .post-content a:visited:not(.anchor) {
+    color: #bcb0e5;
+}
