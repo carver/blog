@@ -90,7 +90,11 @@ In the end I went a very different direction. I'll save that for the next post.
 (Hint: it's almost a Docker container, but some important extra sauce)
 
 If you're interested in a tool without containers, though, there are
-better options. [`nono`](https://github.com/nolabs-ai/nono) does basically what I expected `srt` to
-do, with `nono run --profile claude-code --allow-cwd -- claude`. (I'm not affiliated)
+better options. One example is [`nono`](https://github.com/nolabs-ai/nono),
+which does what I expected `srt` to do out of the box:
+
+```sh
+nono run --profile claude-code --allow-cwd -- claude
+```
 
 Stay safe out there!
