@@ -22,14 +22,23 @@ if [ ! -f "$THEME_DIR/theme.toml" ]; then
   git submodule update --init --recursive
 fi
 
-# CF_PAGES_URL is the unique per-deployment URL Cloudflare injects, e.g.
-# https://a1b2c3d4.blog-preview.pages.dev — the same URL the GitHub check run
-# links to. Hugo needs it as baseURL or every stylesheet and internal link in
-# the preview points back at the production GitHub Pages site.
-if [ -z "${CF_PAGES_URL:-}" ]; then
-  echo "CF_PAGES_URL is unset — this script is meant to run in a Cloudflare Pages build." >&2
+# Build the url for the preview site using the branch name and the Cloudflare domain.
+# First, check that the branch name is available.
+if [ -z "${WORKERS_CI_BRANCH:-}" ]; then
+  echo "WORKERS_CI_BRANCH is unset — this script is meant to run in a Cloudflare Workers build." >&2
   exit 1
 fi
+# Next, check that the rest of the domain is set in Cloudflare.
+# PRODUCTION_DOMAIN is the domain name of the production site, e.g. "blog-preview.a1b2c3.pages.dev".
+if [ -z "${PRODUCTION_DOMAIN:-}" ]; then
+  echo "PRODUCTION_DOMAIN is unset — You must manually set this variable in the Cloudflare Workers build." >&2
+  exit 1
+fi
+# CF_PAGES_URL is the unique per-deployment URL Cloudflare injects, e.g.
+# https://branch-name-blog-preview.a1b2c3.pages.dev — the same URL the GitHub check run
+# links to. Hugo needs it as baseURL or every stylesheet and internal link in
+# the preview points back at the production GitHub Pages site.
+CF_PAGES_URL="https://${WORKERS_CI_BRANCH}-${PRODUCTION_DOMAIN}"
 
 echo "==> Building preview for branch '${CF_PAGES_BRANCH:-unknown}' at $CF_PAGES_URL"
 
