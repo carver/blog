@@ -40,7 +40,7 @@ fi
 # the preview points back at the production GitHub Pages site.
 CF_PAGES_URL="https://${WORKERS_CI_BRANCH}-${PRODUCTION_DOMAIN}"
 
-echo "==> Building preview for branch '${CF_PAGES_BRANCH:-unknown}' at $CF_PAGES_URL"
+echo "==> Building preview for branch '${WORKERS_CI_BRANCH:-unknown}' at $CF_PAGES_URL"
 
 # -D and -F are the whole point of a preview: posts start life as drafts (see
 # archetypes/posts.md) and would otherwise build to an empty site. --gc and
