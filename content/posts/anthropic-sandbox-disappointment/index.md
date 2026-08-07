@@ -1,6 +1,6 @@
 ---
 date: '2026-08-06T10:45:00-07:00'
-draft: true
+draft: false
 title: 'Anthropic Sandbox Disappointment'
 tags: ['anthropic', 'isolation', 'claude-code']
 ---
