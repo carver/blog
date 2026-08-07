@@ -75,6 +75,12 @@ params:
   socialIcons:
     - name: github
       url: "https://github.com/carver"
+    - name: ycombinator
+      url: "https://news.ycombinator.com/user?id=carver"
+    - name: linkedIn
+      url: "https://www.linkedin.com/in/cryptocarver/"
+    - name: bluesky
+      url: "https://bsky.app/profile/jason-carver.bsky.social"
     - name: rss
       url: "index.xml"
 
